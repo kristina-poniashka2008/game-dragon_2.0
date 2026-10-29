@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ASHEN CROWN — Knight vs Dragon</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap');
+:root{--gold:#e7c27b;--gold2:#a9783f;--ink:#0d1117;--panel:#171d26;--muted:#929aa6;--red:#ec624c;--blue:#8dc4db}
+*{box-sizing:border-box}body{margin:0;background:#0a0d12;color:#eee6d7;font-family:Manrope,system-ui,sans-serif;min-height:100vh;background-image:radial-gradient(ellipse at 50% -20%,#29313b 0,transparent 60%)}
+button{font:inherit}.shell{max-width:1250px;margin:auto;padding:22px 22px 28px}.header{display:flex;align-items:center;gap:14px;margin-bottom:18px}.crest{width:48px;height:54px;display:grid;place-items:center;color:#f3d99d;font-size:27px;background:linear-gradient(145deg,#55442e,#171b21);border:1px solid #8d7046;clip-path:polygon(50% 0,94% 15%,88% 75%,50% 100%,12% 75%,6% 15%);filter:drop-shadow(0 5px 12px #0008)}.brand{font:700 23px Cinzel,serif;letter-spacing:2px}.brand span{color:var(--gold)}.subtitle{font-size:9px;letter-spacing:3px;color:#8e98a3;margin-top:4px}.header-right{margin-left:auto;text-align:right}.chapter{font:600 11px Cinzel,serif;color:var(--gold);letter-spacing:2px}.chapter-sub{font-size:10px;color:#737c87;margin-top:5px}
+.arena{position:relative;border:1px solid #49505a;border-radius:12px;overflow:hidden;background:#111820;box-shadow:0 24px 70px #0008}.arena-top{position:absolute;z-index:3;top:0;left:0;right:0;padding:15px 19px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(#080b10d9,transparent);pointer-events:none}.location{font:600 10px Cinzel,serif;letter-spacing:2px;color:#e7d3aa}.live{font-size:9px;letter-spacing:1.4px;color:#c0c7ce}.live:before{content:"";display:inline-block;width:6px;height:6px;background:#80c99a;border-radius:50%;margin-right:8px;box-shadow:0 0 10px #80c99a}
+#scene{display:block;width:100%;height:auto;aspect-ratio:16/7;min-height:285px;max-height:560px;cursor:crosshair}.scene-bottom{position:absolute;bottom:0;left:0;right:0;height:28px;background:linear-gradient(transparent,#0b0d12a8);pointer-events:none}
+.status-row{display:grid;grid-template-columns:1fr auto 1fr;gap:22px;padding:16px 20px 18px;background:linear-gradient(180deg,#1a2029,#141920);border-top:1px solid #414650}.combatant{min-width:0}.combatant.enemy{text-align:right}.name-row{display:flex;align-items:center;gap:9px;margin-bottom:9px}.enemy .name-row{justify-content:flex-end}.portrait{width:28px;height:28px;display:grid;place-items:center;background:#292f38;border:1px solid #62636a;border-radius:6px;color:#f2d89b;font-size:16px}.enemy .portrait{color:#ff9273;border-color:#8c4b40;background:#322326}.fighter-name{font:700 13px Cinzel,serif;letter-spacing:.5px}.fighter-title{font-size:9px;color:#858d97;margin-top:3px;letter-spacing:1px}.bar{height:8px;background:#30343b;border:1px solid #414650;border-radius:2px;overflow:hidden}.barfill{height:100%;width:100%;transition:width .4s ease}.hp-player{background:linear-gradient(90deg,#548b71,#a7d6a0);box-shadow:0 0 14px #70b68c55}.hp-dragon{background:linear-gradient(90deg,#a63d37,#f18b58);box-shadow:0 0 14px #e05e4655}.meta{display:flex;justify-content:space-between;color:#8c949f;font-size:9px;margin-top:6px;letter-spacing:1px}.meta strong{color:#e9e1d4;font-size:10px}.enemy .meta{flex-direction:row-reverse}.vs{align-self:center;color:#71695c;font:700 15px Cinzel,serif;letter-spacing:2px;padding:0 10px}
+.lower{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);gap:14px;margin-top:14px}.panel{border:1px solid #303742;border-radius:10px;background:linear-gradient(145deg,#1a2029,#141920);padding:18px}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:13px}.eyebrow{font-size:9px;letter-spacing:2.3px;color:#a5a19a;font-weight:800}.panel h2{font:600 17px Cinzel,serif;margin:5px 0 0}.turn-badge{font-size:9px;letter-spacing:1px;border:1px solid #4c4538;color:var(--gold);padding:7px 9px;border-radius:4px;white-space:nowrap}.hint{color:#8e97a2;font-size:11px;margin:0 0 15px;line-height:1.6}.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.action{position:relative;text-align:left;min-height:105px;padding:13px 12px 11px;border:1px solid #3a424d;border-radius:7px;background:linear-gradient(145deg,#242c36,#1b222b);color:#f0e8da;cursor:pointer;transition:transform .16s,border-color .16s,background .16s;overflow:hidden}.action:before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,#ffffff09,transparent 45%);pointer-events:none}.action:hover:not(:disabled){transform:translateY(-3px);border-color:#b08b53;background:linear-gradient(145deg,#303743,#202832)}.action:active:not(:disabled){transform:translateY(0) scale(.99)}.action:disabled{opacity:.35;cursor:not-allowed;filter:grayscale(.6)}.action .glyph{display:block;font-size:24px;margin-bottom:12px;color:var(--gold);text-shadow:0 0 15px #d3a95a22}.action.shield .glyph{color:#9bd3e6}.action.ult .glyph{color:#ff926e}.action b{display:block;font-size:11px;letter-spacing:.2px}.action small{display:block;color:#87919d;font-size:9px;margin-top:4px}.key{position:absolute;right:8px;top:8px;border:1px solid #454b54;border-radius:3px;color:#828a95;padding:2px 5px;font-size:8px}.utility-row{display:flex;gap:9px;margin-top:10px}.secondary{flex:1;border:1px solid #3a424c;border-radius:5px;background:#151a21;color:#9da5af;font-size:10px;padding:10px;cursor:pointer}.secondary:hover{border-color:#8a7048;color:#e6cf9f}.secondary.danger:hover{border-color:#8e4941;color:#f19b8c}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.stat{padding:10px 11px;background:#11161d;border:1px solid #2e3540;border-radius:6px}.stat-label{font-size:8px;letter-spacing:1.5px;color:#818b97}.stat-value{font:600 15px Cinzel,serif;color:#e7d7b5;margin-top:5px}.stat-value span{font:500 9px Manrope,sans-serif;color:#8b949f}
+.log{height:218px;overflow:auto;display:flex;flex-direction:column;gap:7px;padding-right:3px}.log-entry{font-size:10px;line-height:1.55;color:#aeb4bd;background:#11161d;border:1px solid #272f39;border-left:2px solid #727783;border-radius:0 5px 5px 0;padding:9px 10px;animation:slidein .2s ease}.log-entry.good{border-left-color:#83c9a1}.log-entry.bad{border-left-color:#e36a57}.log-entry.magic{border-left-color:#d6a9ff}.log-entry:first-child{background:#1b222b;color:#e8e1d6}@keyframes slidein{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.footer{display:flex;justify-content:space-between;color:#606975;font-size:9px;letter-spacing:1px;margin-top:16px}.footer b{color:#9b8b6a;font-weight:600}
+.modal{position:fixed;inset:0;z-index:10;background:#06080ce8;display:grid;place-items:center;padding:20px}.modal.hidden{display:none}.modal-card{max-width:400px;width:100%;padding:35px 28px;background:linear-gradient(145deg,#252c35,#141920);border:1px solid #8c7047;border-radius:10px;text-align:center;box-shadow:0 25px 90px #000b}.modal-icon{font-size:42px;color:var(--gold)}.modal h2{font:700 27px Cinzel,serif;color:#f1d9a4;margin:12px 0}.modal p{font-size:12px;color:#aab1ba;line-height:1.7}.primary{background:linear-gradient(100deg,#a8793f,#dfb66e);border:0;color:#17130e;border-radius:5px;padding:12px 18px;font-weight:800;font-size:11px;letter-spacing:1px;cursor:pointer;margin-top:12px;width:100%}
+@media(max-width:760px){.shell{padding:13px 10px 20px}.brand{font-size:18px}.crest{width:40px;height:46px}.subtitle{font-size:8px;letter-spacing:1.5px}.chapter{font-size:9px}.header-right{max-width:110px}.arena-top{padding:12px}.location{font-size:8px;letter-spacing:1px}.live{font-size:8px}.status-row{gap:7px;padding:12px 10px}.vs{font-size:11px;padding:0 2px}.fighter-name{font-size:10px}.fighter-title{font-size:7px}.portrait{width:23px;height:23px}.name-row{gap:6px;margin-bottom:7px}.meta{font-size:8px}.meta strong{font-size:9px}.lower{grid-template-columns:1fr}.panel{padding:15px}.actions{gap:6px}.action{padding:10px 8px;min-height:96px}.action b{font-size:10px}.action small{font-size:8px}.action .glyph{font-size:21px}.key{right:5px;top:5px}.log{height:145px}.footer{font-size:8px}.stats{margin-top:10px}}
+@media(max-width:390px){.actions{grid-template-columns:1fr}.action{min-height:65px;display:grid;grid-template-columns:34px 1fr;align-items:center;column-gap:7px}.action .glyph{grid-row:1/3;margin:0}.action b{align-self:end}.action small{align-self:start}.key{top:50%;transform:translateY(-50%)}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="header">
+    <div class="crest">♜</div>
+    <div><div class="brand">ASHEN <span>CROWN</span></div><div class="subtitle">ЛЕГЕНДА О ПОСЛЕДНЕМ РЫЦАРЕ</div></div>
+    <div class="header-right"><div class="chapter">ГЛАВА I · ПЕПЕЛ</div><div class="chapter-sub">Арена Чёрного замка</div></div>
+  </header>
+
+  <section class="arena">
+    <div class="arena-top"><div class="location">ЗАБЫТЫЕ РУИНЫ · НОЧЬ</div><div class="live" id="liveState">БОЙ НАЧАЛСЯ</div></div>
+    <canvas id="scene" width="1200" height="525" aria-label="Рыцарь сражается с драконом"></canvas>
+    <div class="scene-bottom"></div>
+    <div class="status-row">
+      <div class="combatant">
+        <div class="name-row"><div class="portrait">♞</div><div><div class="fighter-name">СЭР АЛАРИК</div><div class="fighter-title">РЫЦАРЬ ПОСЛЕДНЕГО ОРДЕНА</div></div></div>
+        <div class="bar"><div class="barfill hp-player" id="playerBar"></div></div>
+        <div class="meta"><span>ЗДОРОВЬЕ</span><strong id="playerHp">100 / 100</strong></div>
+      </div>
+      <div class="vs">VS</div>
+      <div class="combatant enemy">
+        <div class="name-row"><div><div class="fighter-name">ВАРГАНТ</div><div class="fighter-title">ДРЕВНИЙ ПЕПЕЛЬНЫЙ ДРАКОН</div></div><div class="portrait">♨</div></div>
+        <div class="bar"><div class="barfill hp-dragon" id="dragonBar"></div></div>
+        <div class="meta"><span>ЗДОРОВЬЕ</span><strong id="dragonHp">140 / 140</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lower">
+    <div class="panel">
+      <div class="panel-head"><div><div class="eyebrow">ТАКТИКА И БОЙ</div><h2>Твой следующий ход</h2></div><div class="turn-badge" id="turnBadge">ТВОЙ ХОД</div></div>
+      <p class="hint" id="hint">Выбирай тактику. Щит уменьшает урон, но его прочность не бесконечна.</p>
+      <div class="actions">
+        <button class="action" id="attackBtn"><span class="glyph">⚔</span><b>Удар мечом</b><small>Быстро и надёжно</small><span class="key">1</span></button>
+        <button class="action shield" id="shieldBtn"><span class="glyph">⬟</span><b>Поднять щит</b><small>Блок следующего удара</small><span class="key">2</span></button>
+        <button class="action ult" id="ultBtn"><span class="glyph">✹</span><b>Сокрушительный удар</b><small id="ultLabel">2 заряда · большой урон</small><span class="key">3</span></button>
+      </div>
+      <div class="utility-row"><button class="secondary" id="potionBtn">✚ Использовать зелье <span id="potionLabel">(1)</span></button><button class="secondary danger" id="restartBtn">↻ Новая битва</button></div>
+      <div class="stats">
+        <div class="stat"><div class="stat-label">ПРОЧНОСТЬ ЩИТА</div><div class="stat-value" id="shieldValue">30 <span>/ 30</span></div></div>
+        <div class="stat"><div class="stat-label">ПОБЕДЫ</div><div class="stat-value" id="winsValue">0 <span>драконов повержено</span></div></div>
+      </div>
+    </div>
+    <aside class="panel">
+      <div class="panel-head"><div><div class="eyebrow">ХРОНИКИ СРАЖЕНИЯ</div><h2>Летопись боя</h2></div><button class="secondary" id="clearBtn" style="flex:0 0 auto;padding:8px 10px">Очистить</button></div>
+      <div class="log" id="log"><div class="log-entry">Ветер приносит запах пепла. Варант расправляет крылья.</div><div class="log-entry good">Рыцарь достаёт меч. Бой начинается!</div></div>
+    </aside>
+  </section>
+  <footer class="footer"><span>ASHEN CROWN <b>·</b> ПРОТОТИП БОЕВОЙ СИСТЕМЫ</span><span>HTML CANVAS <b>×</b> ООП</span></footer>
+</div>
+<div class="modal hidden" id="modal"><div class="modal-card"><div class="modal-icon" id="modalIcon">♛</div><h2 id="modalTitle">ПОБЕДА</h2><p id="modalText">Дракон пал.</p><button class="primary" id="againBtn">СРАЗИТЬСЯ СНОВА</button></div></div>
+<script>
+"use strict";
+// OOP: Player and Dragon hold their own state; Play coordinates turns and rendering.
+const $ = id => document.getElementById(id);
+const rand = (a,b) => Math.floor(Math.random()*(b-a+1))+a;
+const clamp = (n,a,b) => Math.max(a,Math.min(b,n));
+
+class Player {
+  constructor(){
+    this.maxHp=100; this.hp=100; this.hit=rand(12,16);
+    this.ult=rand(2,3); this.maxShield=30; this.shield=30;
+    this.potions=1; this.blocking=false; this.x=290; this.anim="idle";
+  }
+  strike(power=false){
+    if(power && this.ult<=0) return 0;
+    if(power) this.ult--;
+    return power ? rand(27,36) : rand(this.hit-3,this.hit+3);
+  }
+  takeDamage(amount){
+    if(this.blocking && this.shield>0){
+      const blocked=Math.min(this.shield,Math.ceil(amount*.8));
+      this.shield=Math.max(0,this.shield-amount);
+      this.blocking=false;
+      return {hpDamage:Math.max(0,amount-blocked),blocked};
+    }
+    return {hpDamage:amount,blocked:0};
+  }
+  heal(){if(!this.potions||this.hp===this.maxHp)return 0;this.potions--;const n=Math.min(32,this.maxHp-this.hp);this.hp+=n;return n;}
+}
+class Dragon {
+  constructor(){this.maxHp=140;this.hp=140;this.hit=rand(10,15);this.fire=rand(2,3);this.x=900;this.anim="idle";}
+  strike(){if(this.fire>0&&Math.random()<.5){this.fire--;return {damage:rand(19,27),fire:true};}return {damage:this.hit,fire:false};}
+}
+class Play {
+  constructor(){
+    this.canvas=$("scene");this.ctx=this.canvas.getContext("2d");
+    this.player=new Player();this.dragon=new Dragon();this.turn="player";
+    this.busy=false;this.over=false;this.wins=0;this.round=1;this.log=[];
+    this.fx=[];this.shake=0;this.flash=0;this.last=0;
+    this.bind();this.reset(false);requestAnimationFrame(t=>this.loop(t));
+  }
+  bind(){
+    $("attackBtn").onclick=()=>this.attack(false);
+    $("ultBtn").onclick=()=>this.attack(true);
+    $("shieldBtn").onclick=()=>this.defend();
+    $("potionBtn").onclick=()=>this.potion();
+    $("restartBtn").onclick=$("againBtn").onclick=()=>this.reset(true);
+    $("clearBtn").onclick=()=>{$("log").replaceChildren();this.log=[];this.addLog("Летопись очищена. Битва продолжается.");};
+    document.addEventListener("keydown",e=>{if(e.repeat||e.target.matches("input,textarea"))return;if(e.key==="1")this.attack(false);if(e.key==="2")this.defend();if(e.key==="3")this.attack(true);});
+    window.addEventListener("resize",()=>this.resize());
+  }
+  reset(next=true){
+    if(next)this.round++;
+    this.player=new Player();this.dragon=new Dragon();this.turn="player";this.busy=false;this.over=false;this.fx=[];this.shake=0;this.flash=0;
+    $("modal").classList.add("hidden");$("log").replaceChildren();this.log=[];
+    this.addLog("Варант рычит. Пепел поднимается над руинами.","bad");
+    this.addLog("Рыцарь выставляет щит. Твой ход.","good");
+    $("liveState").textContent="БОЙ НАЧАЛСЯ";this.update();this.resize();
+  }
+  addLog(text,type=""){
+    this.log.unshift({text,type});this.log=this.log.slice(0,30);
+    const log=$("log");log.replaceChildren();
+    this.log.forEach(v=>{const el=document.createElement("div");el.className="log-entry "+v.type;el.textContent=v.text;log.appendChild(el);});
+  }
+  async attack(power){
+    if(this.busy||this.over||this.turn!=="player"||(power&&this.player.ult<=0))return;
+    this.busy=true;this.player.anim=power?"heavy":"attack";
+    const damage=this.player.strike(power);
+    this.addLog(power?`Рыцарь обрушивает сокрушительный удар: ${damage} урона!`:`Меч рыцаря находит брешь: ${damage} урона.`,"good");
+    this.fx.push({kind:power?"slashGold":"slash",x:780,y:290,life:1});
+    this.dragon.hp=Math.max(0,this.dragon.hp-damage);this.dragon.anim="hurt";this.shake=power?12:6;this.update();
+    await this.wait(550);
+    this.dragon.anim="idle";this.player.anim="idle";
+    if(this.endCheck())return;
+    await this.enemyTurn();
+  }
+  async defend(){
+    if(this.busy||this.over||this.turn!=="player")return;
+    this.busy=true;this.player.blocking=true;this.player.anim="block";
+    this.addLog("Рыцарь крепко поднимает щит. Следующий удар будет ослаблен.","good");
+    this.fx.push({kind:"shield",x:300,y:305,life:1});this.update();
+    await this.wait(320);await this.enemyTurn();
+  }
+  async potion(){
+    if(this.busy||this.over||this.turn!=="player")return;
+    const n=this.player.heal();if(!n){this.addLog("Зелье нельзя использовать сейчас.","");return;}
+    this.busy=true;this.player.anim="heal";this.fx.push({kind:"heal",x:280,y:240,life:1});
+    this.addLog(`Зелье восстанавливает ${n} здоровья.`,"good");this.update();
+    await this.wait(420);await this.enemyTurn();
+  }
+  async enemyTurn(){
+    if(this.over)return;
+    this.turn="dragon";this.busy=true;this.player.anim="idle";
+    $("turnBadge").textContent="ХОД ДРАКОНА";$("hint").textContent="Варант собирает силы для ответной атаки…";$("liveState").textContent="ДРАКОН АТАКУЕТ";
+    await this.wait(450);
+    const hit=this.dragon.strike();this.dragon.anim=hit.fire?"fire":"attack";
+    if(hit.fire){this.addLog("Варант раскрывает пасть — из горла вырывается пламя!","bad");this.fx.push({kind:"fire",x:785,y:270,life:1});}
+    else this.addLog("Дракон бросается вперёд и бьёт когтями.","bad");
+    await this.wait(380);
+    const result=this.player.takeDamage(hit.damage);
+    if(result.blocked){this.addLog(`Щит поглощает ${result.blocked} урона${result.hpDamage?`, ${result.hpDamage} проходит сквозь защиту`:" полностью"}!`,"good");this.fx.push({kind:"impactBlue",x:345,y:295,life:1});}
+    else this.addLog(`Рыцарь получает ${result.hpDamage} урона${hit.fire?" от драконьего пламени":" от когтей"}.`,"bad");
+    this.player.hp=Math.max(0,this.player.hp-result.hpDamage);this.shake=hit.fire?11:6;this.flash=hit.fire?.35:.15;
+    this.player.anim="hurt";this.update();await this.wait(480);
+    this.player.anim="idle";this.dragon.anim="idle";
+    if(this.endCheck())return;
+    this.turn="player";this.busy=false;$("turnBadge").textContent="ТВОЙ ХОД";$("hint").textContent="Выбирай тактику. Щит уменьшает урон, но его прочность не бесконечна.";$("liveState").textContent="ТВОЙ ХОД";this.update();
+  }
+  wait(ms){return new Promise(resolve=>setTimeout(resolve,ms));}
+  endCheck(){
+    if(this.player.hp>0&&this.dragon.hp>0)return false;
+    this.over=true;this.busy=true;
+    const won=this.dragon.hp<=0&&this.player.hp>0;
+    if(won){this.wins++;$("modalIcon").textContent="♛";$("modalTitle").textContent="ДРАКОН ПОВЕРЖЕН";$("modalText").textContent="Пепельный замок спасён. Рыцарь становится легендой.";this.addLog("Варант рухнул на камни. Победа за рыцарем!","good");}
+    else{$("modalIcon").textContent="🔥";$("modalTitle").textContent="ТЬМА ПОБЕДИЛА";$("modalText").textContent="Рыцарь пал, но легенда не окончена. Попробуй ещё раз.";}
+    $("liveState").textContent=won?"ПОБЕДА":"ПОРАЖЕНИЕ";$("modal").classList.remove("hidden");this.update();return true;
+  }
+  update(){
+    const p=this.player,d=this.dragon;
+    $("playerHp").textContent=`${p.hp} / ${p.maxHp}`;$("dragonHp").textContent=`${d.hp} / ${d.maxHp}`;
+    $("playerBar").style.width=`${p.hp/p.maxHp*100}%`;$("dragonBar").style.width=`${d.hp/d.maxHp*100}%`;
+    $("shieldValue").innerHTML=`${p.shield} <span>/ ${p.maxShield}</span>`;
+    $("ultLabel").textContent=`${p.ult} заряда · большой урон`;$("potionLabel").textContent=`(${p.potions})`;
+    $("winsValue").innerHTML=`${this.wins} <span>драконов повержено</span>`;
+    const active=!this.busy&&!this.over&&this.turn==="player";
+    $("attackBtn").disabled=!active;$("shieldBtn").disabled=!active||p.shield<=0;
+    $("ultBtn").disabled=!active||p.ult<=0;$("potionBtn").disabled=!active||p.potions<=0||p.hp===p.maxHp;
+  }
+  resize(){const r=this.canvas.getBoundingClientRect();if(!r.width)return;const dpr=Math.min(devicePixelRatio||1,2);this.canvas.width=Math.round(r.width*dpr);this.canvas.height=Math.round(r.width/(1200/525)*dpr);this.ctx.setTransform(this.canvas.width/1200,0,0,this.canvas.height/525,0,0);}
+  loop(t){const dt=Math.min((t-this.last)/1000||0,.04);this.last=t;this.draw(dt);requestAnimationFrame(tt=>this.loop(tt));}
+  draw(dt){
+    const c=this.ctx;c.clearRect(0,0,1200,525);
+    c.save();if(this.shake>0){c.translate(rand(-this.shake,this.shake),rand(-this.shake/2,this.shake/2));this.shake*=.82;if(this.shake<.4)this.shake=0;}
+    this.background(c);
+    this.drawDragon(c,900,265,dt);
+    this.drawKnight(c,280,320,dt);
+    this.drawParticles(c,dt);
+    c.restore();
+    if(this.flash>0){c.fillStyle=`rgba(255,94,48,${this.flash})`;c.fillRect(0,0,1200,525);this.flash*=.86;if(this.flash<.015)this.flash=0;}
+  }
+  background(c){
+    let g=c.createLinearGradient(0,0,0,525);g.addColorStop(0,"#111b2a");g.addColorStop(.58,"#343441");g.addColorStop(1,"#17171d");c.fillStyle=g;c.fillRect(0,0,1200,525);
+    // moon
+    c.save();c.shadowColor="#c5d9e9";c.shadowBlur=35;c.fillStyle="#cbd5d8";c.beginPath();c.arc(830,95,43,0,Math.PI*2);c.fill();c.restore();
+    c.fillStyle="#a3b6c0";c.globalAlpha=.15;c.beginPath();c.arc(814,82,12,0,Math.PI*2);c.arc(847,111,8,0,Math.PI*2);c.fill();c.globalAlpha=1;
+    // distant mountain silhouettes
+    c.fillStyle="#252936";c.beginPath();c.moveTo(0,280);c.lineTo(110,155);c.lineTo(205,265);c.lineTo(335,174);c.lineTo(460,280);c.lineTo(590,180);c.lineTo(700,278);c.lineTo(850,160);c.lineTo(1000,275);c.lineTo(1120,190);c.lineTo(1200,240);c.lineTo(1200,430);c.lineTo(0,430);c.fill();
+    // ruined castle towers
+    c.fillStyle="#191e28";this.poly(c,[[30,300],[40,190],[62,190],[62,170],[83,190],[83,305]]);this.poly(c,[[78,305],[82,235],[108,235],[108,204],[127,235],[134,305]]);
+    this.poly(c,[[1040,300],[1050,180],[1070,180],[1070,160],[1092,180],[1092,300]]);this.poly(c,[[1090,305],[1096,225],[1120,225],[1120,194],[1140,225],[1150,305]]);
+    // stone ground
+    let ground=c.createLinearGradient(0,380,0,525);ground.addColorStop(0,"#4a4240");ground.addColorStop(.25,"#2d2b31");ground.addColorStop(1,"#17191f");c.fillStyle=ground;c.fillRect(0,380,1200,145);
+    c.strokeStyle="#6c5b52";c.globalAlpha=.42;c.lineWidth=2;
+    for(let y=400;y<525;y+=29){c.beginPath();c.moveTo(0,y);c.lineTo(1200,y);c.stroke();}
+    for(let y=405;y<525;y+=58){for(let x=(y%2?0:65);x<1200;x+=130){c.beginPath();c.moveTo(x,y);c.lineTo(x-10,y+27);c.stroke();}}
+    c.globalAlpha=1;
+    // scattered ember points
+    for(let i=0;i<24;i++){const x=(i*173+43)%1200,y=390+(i*31)%120;c.fillStyle=i%3===0?"#d67b4b":"#777078";c.globalAlpha=.25;c.fillRect(x,y,2+(i%3),1+(i%2));}c.globalAlpha=1;
+    // foreground mist
+    const mist=c.createLinearGradient(0,365,0,440);mist.addColorStop(0,"#b3a7a015");mist.addColorStop(1,"#9b969000");c.fillStyle=mist;c.fillRect(0,365,1200,75);
+  }
+  poly(c,pts){c.beginPath();c.moveTo(pts[0][0],pts[0][1]);pts.slice(1).forEach(p=>c.lineTo(p[0],p[1]));c.closePath();c.fill();}
+  drawKnight(c,x,y,dt){
+    const p=this.player;let bob=Math.sin(performance.now()/190)*2;
+    let dx=0,lean=0;if(p.anim==="attack"){dx=40;lean=-.1;}if(p.anim==="heavy"){dx=52;lean=-.25;}if(p.anim==="hurt"){dx=-8;lean=.15;}if(p.anim==="block")lean=-.04;
+    c.save();c.translate(x+dx,y+bob);c.rotate(lean);
+    // shadow
+    c.fillStyle="#090b10aa";c.beginPath();c.ellipse(6,91,75,14,0,0,Math.PI*2);c.fill();
+    // cape
+    c.fillStyle="#6c2732";this.poly(c,[[-23,-13],[-55,-1],[-67,55],[-33,45],[-5,60],[7,-7]]);
+    c.fillStyle="#a24443";this.poly(c,[[-31,-3],[-48,11],[-53,42],[-34,32]]);
+    // legs and boots
+    c.fillStyle="#353b48";this.roundRect(c,-25,37,19,42,5);this.roundRect(c,5,36,19,43,5);
+    c.fillStyle="#171b23";this.roundRect(c,-30,72,29,12,4);this.roundRect(c,1,72,30,12,4);
+    c.fillStyle="#8b8e92";c.fillRect(-24,50,17,4);c.fillRect(6,50,17,4);
+    // torso armor
+    let armor=c.createLinearGradient(-28,-12,30,30);armor.addColorStop(0,"#626f7c");armor.addColorStop(.35,"#d1c8b3");armor.addColorStop(.65,"#77818c");armor.addColorStop(1,"#3d4652");
+    c.fillStyle=armor;this.poly(c,[[-24,-17],[19,-17],[31,34],[20,45],[-23,42],[-33,12]]);
+    c.strokeStyle="#e0d1ad";c.lineWidth=2;c.beginPath();c.moveTo(-19,-9);c.lineTo(12,29);c.stroke();
+    c.fillStyle="#4a5663";c.fillRect(-21,8,43,5);c.fillStyle="#c5a15d";c.fillRect(-3,5,8,10);
+    // left arm
+    c.save();c.translate(-22,-8);c.rotate(p.anim==="block"?-.65:.15);c.fillStyle="#9da6ae";this.roundRect(c,-9,-1,18,38,7);c.fillStyle="#353e49";c.fillRect(-10,23,20,7);c.restore();
+    // neck and helmet
+    c.fillStyle="#b1a38d";c.fillRect(-8,-37,17,22);
+    let helm=c.createLinearGradient(-24,-70,22,-32);helm.addColorStop(0,"#4b5664");helm.addColorStop(.45,"#e1d7c2");helm.addColorStop(1,"#65717e");c.fillStyle=helm;
+    c.beginPath();c.moveTo(-22,-43);c.lineTo(-20,-61);c.lineTo(-9,-72);c.lineTo(10,-72);c.lineTo(23,-57);c.lineTo(19,-34);c.lineTo(0,-27);c.lineTo(-17,-34);c.closePath();c.fill();c.strokeStyle="#222b35";c.lineWidth=3;c.stroke();
+    c.fillStyle="#1b222c";c.fillRect(-16,-48,31,7);c.fillStyle="#e7bf6d";c.fillRect(-12,-46,24,2);
+    c.fillStyle="#b9a06b";this.poly(c,[[-7,-70],[0,-86],[8,-70]]);
+    // shield arm/shield
+    c.save();c.translate(-37,13);if(p.anim==="block")c.rotate(-.35);
+    let sh=c.createLinearGradient(-22,-25,25,35);sh.addColorStop(0,"#5a9ab1");sh.addColorStop(.5,"#244d68");sh.addColorStop(1,"#182c41");c.fillStyle=sh;
+    c.beginPath();c.moveTo(-20,-23);c.lineTo(20,-23);c.lineTo(17,14);c.lineTo(0,37);c.lineTo(-17,14);c.closePath();c.fill();c.strokeStyle="#d6bd7e";c.lineWidth=4;c.stroke();
+    c.strokeStyle="#d5c38e";c.lineWidth=2;c.beginPath();c.moveTo(0,-17);c.lineTo(0,27);c.moveTo(-13,-4);c.lineTo(13,-4);c.stroke();
+    c.fillStyle="#e6ce8e";this.poly(c,[[-1,-11],[7,0],[1,0],[4,12],[-6,1],[0,1]]);c.restore();
+    // sword arm and sword
+    c.save();c.translate(23,-11);if(p.anim==="attack"||p.anim==="heavy")c.rotate(-1.35);else c.rotate(-.22);
+    c.fillStyle="#b7b7ad";this.roundRect(c,-7,0,15,35,6);c.fillStyle="#343c48";c.fillRect(-8,24,17,7);
+    c.translate(2,30);c.rotate(.08);
+    let blade=c.createLinearGradient(-5,0,7,0);blade.addColorStop(0,"#687a89");blade.addColorStop(.5,"#f2ead8");blade.addColorStop(1,"#7c8c98");c.fillStyle=blade;
+    this.poly(c,[[-4,0],[5,0],[4,-75],[0,-94],[-4,-75]]);
+    c.fillStyle="#b98b4c";c.fillRect(-11,-4,22,5);c.fillStyle="#5a3a28";c.fillRect(-3,1,6,12);c.restore();
+    c.restore();
+  }
+  drawDragon(c,x,y,dt){
+    const d=this.dragon;let bob=Math.sin(performance.now()/240+1)*3,dx=0,tilt=0;
+    if(d.anim==="attack"||d.anim==="fire")dx=-22;if(d.anim==="hurt"){dx=7;tilt=.08;}
+    c.save();c.translate(x+dx,y+bob);c.rotate(tilt);
+    c.fillStyle="#080a0e99";c.beginPath();c.ellipse(0,91,126,17,0,0,Math.PI*2);c.fill();
+    // tail
+    c.fillStyle="#51242a";this.poly(c,[[-70,31],[-133,48],[-169,34],[-123,61],[-66,53]]);
+    c.fillStyle="#9b4438";this.poly(c,[[-132,43],[-169,34],[-153,50]]);
+    // far wing membrane
+    c.fillStyle="#3c202a";this.poly(c,[[-30,-28],[-105,-128],[-88,-52],[-125,-80],[-104,3],[-64,20]]);
+    c.strokeStyle="#8d403e";c.lineWidth=4;c.beginPath();c.moveTo(-30,-28);c.lineTo(-105,-128);c.lineTo(-88,-52);c.lineTo(-125,-80);c.lineTo(-104,3);c.stroke();
+    // body
+    let body=c.createLinearGradient(-80,-15,75,65);body.addColorStop(0,"#4c242d");body.addColorStop(.45,"#9e493d");body.addColorStop(.8,"#5b2931");body.addColorStop(1,"#291d27");c.fillStyle=body;
+    c.beginPath();c.ellipse(-13,23,83,49,-.08,0,Math.PI*2);c.fill();c.strokeStyle="#361e27";c.lineWidth=4;c.stroke();
+    // belly plates
+    c.fillStyle="#b87958";for(let i=0;i<5;i++){c.beginPath();c.ellipse(10+i*4,28+i*6,43-i*4,7,0,0,Math.PI*2);c.fill();}
+    // legs
+    c.fillStyle="#6b3036";this.roundRect(c,-52,43,26,43,9);this.roundRect(c,34,43,26,43,9);
+    c.fillStyle="#bd7858";for(let xx of [-55,-37,30,48]){this.poly(c,[[xx,78],[xx+7,78],[xx+11,88],[xx+4,85]]);}
+    // neck rising toward head
+    let neck=c.createLinearGradient(15,-50,85,20);neck.addColorStop(0,"#a74d3e");neck.addColorStop(.6,"#6e2d34");neck.addColorStop(1,"#3a202a");c.fillStyle=neck;
+    c.beginPath();c.moveTo(23,5);c.quadraticCurveTo(42,-35,72,-69);c.lineTo(111,-52);c.quadraticCurveTo(81,-9,70,22);c.closePath();c.fill();c.strokeStyle="#3b2028";c.lineWidth=4;c.stroke();
+    // near wing
+    c.fillStyle="#612831";this.poly(c,[[-17,-14],[-63,-112],[-34,-80],[4,-121],[9,-46],[50,-81],[35,-4]]);
+    c.strokeStyle="#b15a48";c.lineWidth=4;c.beginPath();c.moveTo(-17,-14);c.lineTo(-63,-112);c.lineTo(-34,-80);c.lineTo(4,-121);c.lineTo(9,-46);c.lineTo(50,-81);c.lineTo(35,-4);c.stroke();
+    // head and snout
+    let head=c.createLinearGradient(58,-91,138,-38);head.addColorStop(0,"#bd6245");head.addColorStop(.55,"#8a3c38");head.addColorStop(1,"#47242b");c.fillStyle=head;
+    c.beginPath();c.moveTo(67,-72);c.quadraticCurveTo(82,-100,112,-89);c.lineTo(139,-70);c.lineTo(153,-52);c.lineTo(129,-35);c.lineTo(93,-40);c.lineTo(67,-52);c.closePath();c.fill();c.strokeStyle="#341e27";c.lineWidth=4;c.stroke();
+    // horns
+    c.fillStyle="#d5b47a";this.poly(c,[[83,-83],[74,-113],[97,-91]]);this.poly(c,[[107,-86],[121,-110],[119,-78]]);
+    // eye
+    c.fillStyle="#f8c34e";c.beginPath();c.ellipse(109,-70,10,6,-.1,0,Math.PI*2);c.fill();c.fillStyle="#25171d";c.fillRect(111,-76,3,12);c.fillStyle="#fff0ba";c.fillRect(105,-72,3,2);
+    // nostril and mouth
+    c.fillStyle="#28171d";c.beginPath();c.arc(141,-57,3,0,Math.PI*2);c.fill();c.strokeStyle="#e18a60";c.lineWidth=2;c.beginPath();c.moveTo(115,-43);c.lineTo(144,-47);c.stroke();
+    // teeth
+    c.fillStyle="#f1d9a8";this.poly(c,[[123,-43],[129,-43],[126,-35]]);this.poly(c,[[136,-46],[142,-47],[138,-39]]);
+    // spikes on back
+    c.fillStyle="#d1a06a";for(let i=0;i<5;i++){let sx=-50+i*22,sy=-13-Math.sin(i/5*Math.PI)*8;this.poly(c,[[sx,sy],[sx+8,sy-19],[sx+15,sy+1]]);}
+    // fire glow in mouth when attacking
+    if(d.anim==="fire"){c.save();c.shadowColor="#ff6b28";c.shadowBlur=30;let fg=c.createLinearGradient(140,-52,290,-25);fg.addColorStop(0,"#fff4a4");fg.addColorStop(.25,"#ffb238");fg.addColorStop(.7,"#f04c26");fg.addColorStop(1,"#d92c24");c.fillStyle=fg;c.beginPath();c.moveTo(143,-53);c.quadraticCurveTo(205,-81,285,-38);c.quadraticCurveTo(230,-30,278,-6);c.quadraticCurveTo(190,-18,143,-46);c.fill();c.restore();}
+    c.restore();
+  }
+  drawParticles(c,dt){
+    for(let i=this.fx.length-1;i>=0;i--){const f=this.fx[i];f.life-=dt*1.3;if(f.life<=0){this.fx.splice(i,1);continue;}
+      c.save();c.globalAlpha=clamp(f.life,0,1);
+      if(f.kind==="fire"){
+        for(let j=0;j<60;j++){const t=(1-f.life)*190+j*2.3;const x=f.x-t;const spread=Math.sin(j*9+performance.now()*.015)*t*.14;const y=f.y+spread+(j%7-3)*5;const r=(3+(j%6)*1.4)*f.life;
+          const g=c.createRadialGradient(x,y,0,x,y,r*2);g.addColorStop(0,"#fff8c4");g.addColorStop(.3,"#ffbd44");g.addColorStop(1,"#e83924");c.fillStyle=g;c.beginPath();c.ellipse(x,y,r*1.8,r,0,0,Math.PI*2);c.fill();}
+      }else if(f.kind==="slash"||f.kind==="slashGold"){
+        c.translate(f.x,f.y);c.rotate(-.6);c.strokeStyle=f.kind==="slashGold"?"#ffe2a0":"#d8edf2";c.lineWidth=f.kind==="slashGold"?9:5;c.shadowColor=c.strokeStyle;c.shadowBlur=20;c.beginPath();c.arc(0,0,55,-1.1+f.life*.4,1.1-f.life*.4);c.stroke();
+        for(let j=0;j<8;j++){c.fillStyle="#ffd889";c.fillRect(rand(-45,45),rand(-35,35),3,3);}
+      }else if(f.kind==="shield"||f.kind==="impactBlue"){
+        c.translate(f.x,f.y);c.strokeStyle="#a9e8ff";c.lineWidth=4;c.shadowColor="#68cfff";c.shadowBlur=18;c.beginPath();c.arc(0,0,35+(1-f.life)*25,0,Math.PI*2);c.stroke();
+        for(let j=0;j<8;j++){let a=j*Math.PI/4+(1-f.life);c.fillStyle="#d2f6ff";c.fillRect(Math.cos(a)*42,Math.sin(a)*42,4,4);}
+      }else if(f.kind==="heal"){
+        c.translate(f.x,f.y);c.strokeStyle="#8ce0a8";c.lineWidth=4;c.shadowColor="#8ce0a8";c.shadowBlur=18;c.beginPath();c.arc(0,0,25+(1-f.life)*40,0,Math.PI*2);c.stroke();c.fillStyle="#a4f5bb";c.font="bold 25px sans-serif";c.fillText("+", -8,8);
+      }
+      c.restore();
+    }
+  }
+  roundRect(c,x,y,w,h,r){c.beginPath();c.roundRect(x,y,w,h,r);c.fill();}
+}
+const game=new Play();
+</script>
+</body>
+</html>
